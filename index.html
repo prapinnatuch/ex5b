@@ -33,7 +33,7 @@
 	</div>
 	
 <script>
-        // 1. สร้างฟังก์ชันแยกออกมาข้างนอก (Refactor)
+        // ฟังก์ชันตรวจสอบ (จากข้อเมื่อกี้)
         function validateTemp(t) {
             if (isNaN(t)) {
                 msg = "Please verify whether the temperature value is correct!!!";
@@ -48,32 +48,37 @@
             return true;
         }
 
+        // 1. สร้างฟังก์ชันคำนวณแยกออกมา (Refactor #2)
+        function convert(t, u) {
+             var t1;
+             var u1;
+             if(u == "F"){
+                t1 = t * (9/5) + 32;
+                u1 = "Fahrenheit";
+            } else if(u == "K"){
+                t1 = t + 273.15;
+                u1 = "Kelvin";
+            } else if(u == "R"){
+                t1 = t * (4/5);
+                u1 = "Réaumur";
+            }
+            return { t1: t1, u1: u1 }; // ส่งค่ากลับเป็นวัตถุ (Object)
+        }
+
         $(document).ready(function() {
             $("button").click(function() {
                 var t = Number($('#temp').val()); //celsius
                 var u = $('#unit').val();
 
-                // 2. เรียกใช้ฟังก์ชันที่สร้างไว้
+                // เรียกใช้ฟังก์ชันตรวจสอบ
                 if (!validateTemp(t)) {
                     return;
                 }
 
-                // ... (ส่วนคำนวณเดิมด้านล่างปล่อยไว้เหมือนเดิม) ...
-                var t1;
-                var u1;
+                // 2. เรียกใช้ฟังก์ชันคำนวณที่สร้างใหม่
+                var result = convert(t, u);
                 
-                if(u == "F"){
-                    t1 = t * (9/5) + 32;
-                    u1 = "Fahrenheit";
-                } else if(u == "K"){
-                    t1 = t + 273.15;
-                    u1 = "Kelvin";
-                } else if(u == "R"){
-                    t1 = t * (4/5);
-                    u1 = "Réaumur";
-                }
-
-                alert("Temperature is " + t1 + " in " + u1);
+                alert("Temperature is " + result.t1 + " in " + result.u1);
             });
         });
     </script>
